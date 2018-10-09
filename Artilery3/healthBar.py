@@ -25,15 +25,18 @@ class HealthBar:
     offset = 2 
 
     def __init__(self):
-        health_sprite_list = pygame.sprite.Group()
-        for i in self.max_life:
+        self.health_sprite_list = pygame.sprite.Group()
+        for i in range(self.max_life):
             self.health_sprite_list.add(HealthBlock(GREEN,self.block_size['x'],self.block_size['y']))
 
         
     def setPos(self, _x_pos, _y_pos):
         health_sprites = self.health_sprite_list.sprites()
         
-        for i in self.max_life:
-            health_sprites[i].setPos(_x_pos + (i*(self.block_size['x'] + self.offset))
+        for i in range(self.max_life):
+            health_sprites[i].setPos(_x_pos + (i*(self.block_size['x'] + self.offset)), _y_pos)
     
     
+    
+    def getGroup(self):
+        return self.health_sprite_list
