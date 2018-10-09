@@ -1,6 +1,7 @@
 import pygame
 
 class Tank(pygame.sprite.Sprite): 
+    
 
     def __init__(self, _color, _x_pos, _y_pos):
         print("Creating new Tank...")
@@ -18,5 +19,5 @@ class Tank(pygame.sprite.Sprite):
 
     
 
-    
+
 

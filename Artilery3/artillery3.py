@@ -1,6 +1,7 @@
 import pygame
 import menu 
 import tank
+import random
 
 
 # Define some colors
@@ -10,6 +11,7 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+tank_colors = [WHITE, BLUE, GREEN, RED]
 
         
 
@@ -17,26 +19,35 @@ RED = (255, 0, 0)
 
 
 if __name__ == "__main__":
+
+    myMenu = menu.MenuArtillery3()
+
+    myMenu.run()
+
     pygame.init()
-    screen = pygame.display.set_mode((500,150))
+    screen_width = 500
+    screen_height = 150
+    screen = pygame.display.set_mode((screen_width,screen_height))
     screen.fill(BLACK)
     canPlay = True
     clock = pygame.time.Clock()
 
+    canPlay = myMenu.start_game
+
+    tank_sprites_list = pygame.sprite.Group()
     tank_size = {'x':10, 'y':4}
 
-    tank1 = tank.Tank(RED,tank_size['x'],tank_size['y'])
-    tank2 = tank.Tank(GREEN,tank_size['x'],tank_size['y'])
+    color_index = random.randint(0,3)
+    print(color_index)
 
-    tank1.rect.x = 10
-    tank1.rect.y = 140
+    for i in range(myMenu.num_max_tanks):
+        print(i)
+        index = (color_index + i) % len(tank_colors)
+        tank_aux = tank.Tank(tank_colors[index],tank_size['x'],tank_size['y'])
+        tank_aux.rect.x = random.randrange(10, screen_width - 20)
+        tank_aux.rect.y = screen_height - 10
+        tank_sprites_list.add(tank_aux)
 
-    tank2.rect.x = 480
-    tank2.rect.y = 140
-
-    all_sprites_list = pygame.sprite.Group()
-    all_sprites_list.add(tank1)
-    all_sprites_list.add(tank2)
 
     while canPlay:
         #TODO CATCH CONTROLS
@@ -49,7 +60,7 @@ if __name__ == "__main__":
         #TODO UPDATE
 
         #DRAW
-        all_sprites_list.draw(screen)
+        tank_sprites_list.draw(screen)
 
         pygame.display.flip()
 
