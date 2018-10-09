@@ -3,6 +3,14 @@ import menu
 import tank
 import random
 
+#DEFINE EVENTS
+SELECT_ACTION = 0
+REPAIR = 1
+SHIELD = 2
+FUEL = 3
+MOVE = 4
+SHOOT = 5
+CHARGE = 6
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -48,21 +56,46 @@ if __name__ == "__main__":
         tank_aux.rect.y = screen_height - 10
         tank_sprites_list.add(tank_aux)
 
+    current_player = random.randint(0,2)
+
+    key_event = None
+    current_event = SELECT_ACTION
+    next_event = None
 
     while canPlay:
         #TODO CATCH CONTROLS
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 canPlay = False
+            elif event.type == pygame.KEYDOWN:
+                key_event = event.key
+                print("Event key= " + event.unicode)
+                                
         #FILL 
-        screen.fill(BLACK)
+        #screen.fill(BLACK)
 
         #TODO UPDATE
+        if current_event == SELECT_ACTION:
+            if key_event == pygame.K_s:
+                next_event = SHOOT
+            if key_event == pygame.K_r:
+                next_event = REPAIR
+            if key_event == pygame.K_a:
+                next_event = SHIELD
+            if key_event == pygame.K_f:
+                next_event = FUEL
+            if key_event == pygame.K_m:
+                next_event = MOVE
+            if key_event == pygame.K_c:
+                next_event = CHARGE
+                
+
+            tank_sprites_list.sprites()[current_player].update(next_event, key_event)
 
         #DRAW
-        tank_sprites_list.draw(screen)
+        #tank_sprites_list.draw(screen)
 
-        pygame.display.flip()
+        #pygame.display.flip()
 
         clock.tick(60)
 
