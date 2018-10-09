@@ -1,6 +1,8 @@
 import pygame
 
 import healthBar
+import bombBar
+import fuelBar
 
 
 # Define some colors
@@ -21,7 +23,13 @@ if __name__ == "__main__":
     clock = pygame.time.Clock()
 
     myHealthBar = healthBar.HealthBar()
+    myBombBar = bombBar.BombBar()
+    myFuelBar = fuelBar.FuelBar()
+
+    
     myHealthBar.setPos(2,2)
+    myBombBar.setPos(2,10)
+    myFuelBar.setPos(2,20)
 
     while canPlay:
         for event in pygame.event.get():
@@ -32,6 +40,8 @@ if __name__ == "__main__":
                 print("Event key= " + event.unicode)
 
             myHealthBar.getGroup().draw(screen)
+            myBombBar.getGroup().draw(screen)
+            myFuelBar.getGroup().draw(screen)
 
             pygame.display.flip()
         
