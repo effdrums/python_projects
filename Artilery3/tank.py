@@ -24,6 +24,9 @@ class Tank(pygame.sprite.Sprite):
     time_start_shake = None
     min_elapsed = 0.100
 
+    screen_width = None
+
+
     def __init__(self, _color, _width, _height):
         print("Creating new Tank...")
 
@@ -47,6 +50,9 @@ class Tank(pygame.sprite.Sprite):
         self.rect.x = _x_pos
         self.rect.y = _y_pos
 
+    def setScreenSize(self, screen_width, screen_height):
+        self.setScreenSize = { 'w': screen_width, 'h': screen_height }
+
         
     
 
@@ -69,6 +75,15 @@ class Tank(pygame.sprite.Sprite):
             print("Charge fuel...")
         elif event == MOVE:
             print("Move...")
+            
+            if key == pygame.K_RIGHT:
+                if (self.rect.x + self.image.get_width() < self.setScreenSize['w'] - self.image.get_width() ):
+                    self.rect.x += 1
+            elif key == pygame.K_LEFT:
+                if self.rect.x > 0: 
+                    self.rect.x -= 1
+                    
+
         elif event == SHOOT:
             print("Shooting...")
         elif event == CHARGE:
