@@ -54,11 +54,13 @@ if __name__ == "__main__":
         tank_aux = tank.Tank(tank_colors[index],tank_size['x'],tank_size['y'])
         tank_aux.rect.x = random.randrange(10, screen_width - 20)
         tank_aux.rect.y = screen_height - 10
+        tank_aux.setScreenSize(screen_width,screen_height)
         tank_sprites_list.add(tank_aux)
 
     current_player = random.randint(0,2)
 
     key_event = None
+    key_type = None
     current_event = SELECT_ACTION
     next_event = None
 
@@ -69,7 +71,11 @@ if __name__ == "__main__":
                 canPlay = False
             elif event.type == pygame.KEYDOWN:
                 key_event = event.key
+                key_type = event.type
                 print("Event key= " + event.unicode)
+            elif event.type == pygame.KEYUP:
+                print("KEYUP!!")
+                key_type = event.type
                                 
         #FILL 
         screen.fill(BLACK)
@@ -92,10 +98,15 @@ if __name__ == "__main__":
                 next_event = SELECT_ACTION
 
    
-            current_tank = tank_sprites_list.sprites()[current_player]
-            print("EVENT = " + str(current_event))
-            current_tank.update(next_event, key_event)
+        current_tank = tank_sprites_list.sprites()[current_player]
+        print("EVENT = " + str(current_event))
+        current_tank.update(next_event, key_event, key_type)
+        current_event = next_event
 
+        if current_tank.isChangeTurn():
+            current_event = SELECT_ACTION
+        
+    
         #DRAW
         current_tank.drawInfo(screen)
         tank_sprites_list.draw(screen)

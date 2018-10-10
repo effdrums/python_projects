@@ -24,7 +24,9 @@ class Tank(pygame.sprite.Sprite):
     time_start_shake = None
     min_elapsed = 0.100
 
-    screen_width = None
+    screen_size = None
+
+    changeTurn = False
 
 
     def __init__(self, _color, _width, _height):
@@ -51,15 +53,22 @@ class Tank(pygame.sprite.Sprite):
         self.rect.y = _y_pos
 
     def setScreenSize(self, screen_width, screen_height):
-        self.setScreenSize = { 'w': screen_width, 'h': screen_height }
+        self.screen_size = { 'w': screen_width, 'h': screen_height }
 
         
-    
+    def isChangeTurn(self):
+        return self.changeTurn
 
-    def update(self,event, key):
-        print("Calling Update Tank..." + str(event))
+    def update(self,event, key, ev_type):
+        #print("Calling Update Tank..." + str(event))
+        if self.time_start_shake is None:
+            self.time_start_shake = time.time()
+
+        if (time.time() - self.time_start_shake) >= self.min_elapsed:
+            self.tankShake()
+
         if event == SELECT_ACTION:
-            print("Selecting Action...")
+            #print("Selecting Action...")
             
             if self.time_start_shake is None:
                 self.time_start_shake = time.time()
@@ -75,14 +84,22 @@ class Tank(pygame.sprite.Sprite):
             print("Charge fuel...")
         elif event == MOVE:
             print("Move...")
+            if ev_type == pygame.KEYDOWN:
+                if key == pygame.K_RIGHT:
+                    print("Moving right")
+                    if (self.rect.x + self.image.get_width() < self.screen_size['w'] - self.image.get_width() ):
+                        self.rect.x += 1
+                elif key == pygame.K_LEFT:
+                    print("Moving left")
+                    if self.rect.x > 0: 
+                        self.rect.x -= 1
+            elif ev_type == pygame.KEYUP:
+                if key == pygame.K_RIGHT or key == pygame.K_LEFT:
+                    print("CHANGE!!!")
+                    self.changeTurn = True
+
             
-            if key == pygame.K_RIGHT:
-                if (self.rect.x + self.image.get_width() < self.setScreenSize['w'] - self.image.get_width() ):
-                    self.rect.x += 1
-            elif key == pygame.K_LEFT:
-                if self.rect.x > 0: 
-                    self.rect.x -= 1
-                    
+                
 
         elif event == SHOOT:
             print("Shooting...")
