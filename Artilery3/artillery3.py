@@ -72,24 +72,28 @@ if __name__ == "__main__":
                 print("Event key= " + event.unicode)
                                 
         #FILL 
-        #screen.fill(BLACK)
+        screen.fill(BLACK)
 
         #TODO UPDATE
         if current_event == SELECT_ACTION:
             if key_event == pygame.K_s:
                 next_event = SHOOT
-            if key_event == pygame.K_r:
+            elif key_event == pygame.K_r:
                 next_event = REPAIR
-            if key_event == pygame.K_a:
+            elif key_event == pygame.K_a:
                 next_event = SHIELD
-            if key_event == pygame.K_f:
+            elif key_event == pygame.K_f:
                 next_event = FUEL
-            if key_event == pygame.K_m:
+            elif key_event == pygame.K_m:
                 next_event = MOVE
-            if key_event == pygame.K_c:
+            elif key_event == pygame.K_c:
                 next_event = CHARGE
-                
+            else:
+                next_event = SELECT_ACTION
+
+   
             current_tank = tank_sprites_list.sprites()[current_player]
+            print("EVENT = " + str(current_event))
             current_tank.update(next_event, key_event)
 
         #DRAW
