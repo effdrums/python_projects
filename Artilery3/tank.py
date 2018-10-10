@@ -15,14 +15,18 @@ class Tank(pygame.sprite.Sprite):
 
     myHealthBar = None
     myBombBar = None
-    myFuelBar = None 
+    myFuelBar = None
+    
+    shake_count = 0
+    shake_up = True
+    
 
-    def __init__(self, _color, _x_pos, _y_pos):
+    def __init__(self, _color, _width, _height):
         print("Creating new Tank...")
 
         super().__init__()
 
-        self.image = pygame.Surface([_x_pos,_y_pos])
+        self.image = pygame.Surface([_width,_height])
         self.image.fill(_color)
 
         self.rect = self.image.get_rect()
@@ -36,10 +40,20 @@ class Tank(pygame.sprite.Sprite):
         self.myFuelBar = fuelBar.FuelBar()
         self.myFuelBar.setPos(2,20)
 
+    def setPos(self, _x_pos, _y_pos):
+        self.rect.x = _x_pos
+        self.rect.y = _y_pos
+
+        
+    
+
     def update(self,event, key):
-        print("Calling Update Tank...")
+        print("Calling Update Tank..." + str(event))
         if event == SELECT_ACTION:
             print("Selecting Action...")
+            
+            self.tankShake()
+
         elif event == REPAIR:
             print("Repairing...")
         elif event == SHIELD:
@@ -58,5 +72,20 @@ class Tank(pygame.sprite.Sprite):
         self.myHealthBar.getGroup().draw(screen)
         self.myBombBar.getGroup().draw(screen)
         self.myFuelBar.getGroup().draw(screen)
+
+    def tankShake(self):
+        max_shake = 3
+        min_shake = 0  
+        if self.shake_up:
+            self.rect.y -= 1
+            self.shake_count += 1
+            if self.shake_count == max_shake:
+                self.shake_up = False
+        elif not self.shake_up:
+            self.rect.y += 1
+            self.shake_count -= 1
+            if self.shake_count == 0:
+                self.shake_up = True
+
 
 
