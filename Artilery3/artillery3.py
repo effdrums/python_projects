@@ -89,13 +89,15 @@ if __name__ == "__main__":
             if key_event == pygame.K_c:
                 next_event = CHARGE
                 
-
-            tank_sprites_list.sprites()[current_player].update(next_event, key_event)
+            current_tank = tank_sprites_list.sprites()[current_player]
+            current_tank.update(next_event, key_event)
 
         #DRAW
-        #tank_sprites_list.draw(screen)
+        current_tank.drawInfo(screen)
+        tank_sprites_list.draw(screen)
 
-        #pygame.display.flip()
+
+        pygame.display.flip()
 
         clock.tick(60)
 

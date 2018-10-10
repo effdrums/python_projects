@@ -1,4 +1,7 @@
 import pygame
+import healthBar
+import bombBar
+import fuelBar
 
 SELECT_ACTION = 0
 REPAIR = 1
@@ -10,6 +13,9 @@ CHARGE = 6
 
 class Tank(pygame.sprite.Sprite): 
 
+    myHealthBar = None
+    myBombBar = None
+    myFuelBar = None 
 
     def __init__(self, _color, _x_pos, _y_pos):
         print("Creating new Tank...")
@@ -21,6 +27,14 @@ class Tank(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
+        self.myHealthBar = healthBar.HealthBar()
+        self.myHealthBar.setPos(2,2)
+        
+        self.myBombBar = bombBar.BombBar()
+        self.myBombBar.setPos(2,10)
+
+        self.myFuelBar = fuelBar.FuelBar()
+        self.myFuelBar.setPos(2,20)
 
     def update(self,event, key):
         print("Calling Update Tank...")
@@ -39,5 +53,10 @@ class Tank(pygame.sprite.Sprite):
         elif event == CHARGE:
             print("Get random charge...")
 
+
+    def drawInfo(self, screen):
+        self.myHealthBar.getGroup().draw(screen)
+        self.myBombBar.getGroup().draw(screen)
+        self.myFuelBar.getGroup().draw(screen)
 
 
