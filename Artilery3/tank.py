@@ -2,6 +2,7 @@ import pygame
 import healthBar
 import bombBar
 import fuelBar
+import time
 
 SELECT_ACTION = 0
 REPAIR = 1
@@ -20,6 +21,8 @@ class Tank(pygame.sprite.Sprite):
     shake_count = 0
     shake_up = True
     
+    time_start_shake = None
+    min_elapsed = 0.100
 
     def __init__(self, _color, _width, _height):
         print("Creating new Tank...")
@@ -52,7 +55,11 @@ class Tank(pygame.sprite.Sprite):
         if event == SELECT_ACTION:
             print("Selecting Action...")
             
-            self.tankShake()
+            if self.time_start_shake is None:
+                self.time_start_shake = time.time()
+
+            if (time.time() - self.time_start_shake) >= self.min_elapsed:
+                self.tankShake()
 
         elif event == REPAIR:
             print("Repairing...")
@@ -74,7 +81,8 @@ class Tank(pygame.sprite.Sprite):
         self.myFuelBar.getGroup().draw(screen)
 
     def tankShake(self):
-        max_shake = 3
+        self.time_start_shake = time.time()
+        max_shake = 2
         min_shake = 0  
         if self.shake_up:
             self.rect.y -= 1
