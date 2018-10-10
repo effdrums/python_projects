@@ -89,10 +89,13 @@ class Tank(pygame.sprite.Sprite):
                     print("Moving right")
                     if (self.rect.x + self.image.get_width() < self.screen_size['w'] - self.image.get_width() ):
                         self.rect.x += 1
+                        self.myFuelBar.consume()
+                        
                 elif key == pygame.K_LEFT:
                     print("Moving left")
                     if self.rect.x > 0: 
                         self.rect.x -= 1
+                        self.myFuelBar.consume()
             elif ev_type == pygame.KEYUP:
                 if key == pygame.K_RIGHT or key == pygame.K_LEFT:
                     print("CHANGE!!!")
