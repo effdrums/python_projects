@@ -39,6 +39,8 @@ class FuelBar:
         
         fuel_sprites[0].setPos(_x_pos, _y_pos)
     
+    def draw(self,screen):
+        self.fuel_sprite_list.draw(screen)
     
     
     def getGroup(self):

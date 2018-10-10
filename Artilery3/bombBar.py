@@ -39,7 +39,8 @@ class BombBar:
         for i in range(self.max_bomb):
             bomb_sprites[i].setPos(_x_pos + (i*(2*self.block_size + self.offset)), _y_pos)
     
-    
+    def draw(self,screen):
+        self.bomb_sprite_list.draw(screen)
     
     def getGroup(self):
         return self.bomb_sprite_list

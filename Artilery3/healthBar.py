@@ -37,6 +37,8 @@ class HealthBar:
             health_sprites[i].setPos(_x_pos + (i*(self.block_size['x'] + self.offset)), _y_pos)
     
     
+    def draw(self,screen):
+        self.health_sprite_list.draw(screen)
     
     def getGroup(self):
         return self.health_sprite_list
