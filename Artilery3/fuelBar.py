@@ -25,7 +25,7 @@ class FuelBar:
     max_fuel = 100
     fuel_sprite_list = None
     block_size = {'x':68, 'y':5}
-     
+    current_fuel = 100 
 
     def __init__(self):
         self.fuel_sprite_list = pygame.sprite.Group()
@@ -45,3 +45,15 @@ class FuelBar:
     
     def getGroup(self):
         return self.fuel_sprite_list
+
+    def consume(self):
+        if self.current_fuel > 0:
+            
+            self.current_fuel -= 0.2
+            
+            if self.current_fuel <0: 
+                self.current_fuel = 0
+            
+            new_width = int( int(self.current_fuel) * self.block_size['x'] / self.max_fuel)
+
+            pygame.transform.scale(self.fuel_sprite_list.sprites()[0].image, (new_width, self.block_size['y']))

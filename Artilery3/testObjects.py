@@ -39,9 +39,9 @@ if __name__ == "__main__":
                 key_event = event.key
                 print("Event key= " + event.unicode)
 
-            myHealthBar.getGroup().draw(screen)
-            myBombBar.getGroup().draw(screen)
-            myFuelBar.getGroup().draw(screen)
+            myHealthBar.draw(screen)
+            myBombBar.draw(screen)
+            myFuelBar.draw(screen)
 
             pygame.display.flip()
         
