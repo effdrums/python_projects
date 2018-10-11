@@ -3,6 +3,7 @@ import pygame
 import healthBar
 import bombBar
 import fuelBar
+import cannon
 
 
 # Define some colors
@@ -26,6 +27,11 @@ if __name__ == "__main__":
     myBombBar = bombBar.BombBar()
     myFuelBar = fuelBar.FuelBar()
 
+    myCannon = cannon.Cannon(GREEN, (10,2))
+    myCannon.setPos(100,100)
+
+    group = pygame.sprite.Group()
+    group.add(myCannon)
     
     myHealthBar.setPos(2,2)
     myBombBar.setPos(2,10)
@@ -38,12 +44,18 @@ if __name__ == "__main__":
             elif event.type == pygame.KEYDOWN:
                 key_event = event.key
                 print("Event key= " + event.unicode)
+                myCannon.rotate()
 
-            myHealthBar.draw(screen)
-            myBombBar.draw(screen)
-            myFuelBar.draw(screen)
+        screen.fill(BLACK)
 
-            pygame.display.flip()
+        myCannon.rotate()
+
+        myHealthBar.draw(screen)
+        myBombBar.draw(screen)
+        myFuelBar.draw(screen)
+        group.draw(screen)
+            
+        pygame.display.flip()
         
         clock.tick(60)
 
