@@ -105,8 +105,15 @@ if __name__ == "__main__":
         current_event = next_event
 
         if current_tank.isChangeTurn():
-            current_event = SELECT_ACTION
-        
+            print("HAS CHANGED!!!!")
+            #key_event = None
+            #key_type = None
+            current_event = next_event = SELECT_ACTION
+            #next_event = None
+            current_player += 1
+            current_player %= 3
+            tank_sprites_list.sprites()[current_player].changeTurn = False
+
     
         #DRAW
         current_tank.drawInfo(screen)

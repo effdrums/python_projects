@@ -31,6 +31,7 @@ class Tank(pygame.sprite.Sprite):
     screen_size = None
 
     changeTurn = False
+    hasShoot = False
 
 
     def __init__(self, _color, _width, _height):
@@ -98,13 +99,15 @@ class Tank(pygame.sprite.Sprite):
                 if key == pygame.K_RIGHT:
                     print("Moving right")
                     if (self.rect.x + self.image.get_width() < self.screen_size['w'] - self.image.get_width() ):
-                        self.rect.x += 1
+                        x = self.rect.x + 1
+                        self.setPos(x,self.rect.y)
                         self.myFuelBar.consume()
 
                 elif key == pygame.K_LEFT:
                     print("Moving left")
                     if self.rect.x > 0: 
-                        self.rect.x -= 1
+                        x = self.rect.x - 1
+                        self.setPos(x, self.rect.y)
                         self.myFuelBar.consume()
             elif ev_type == pygame.KEYUP:
                 if key == pygame.K_RIGHT or key == pygame.K_LEFT:
@@ -116,8 +119,19 @@ class Tank(pygame.sprite.Sprite):
 
         elif event == SHOOT:
             print("Shooting...")
-            self.active_group.add(self.myCannon)
-            self.myCannon.rotate()
+            if not self.active_group.has(self.myCannon):
+                self.active_group.add(self.myCannon)
+            if ev_type == pygame.KEYDOWN:
+                if key == pygame.K_SPACE:
+                    self.hasShoot = True
+
+            if not self.hasShoot:
+                self.myCannon.rotate()
+            else:
+                print("Shoot angle = " + str(self.myCannon.degree))
+                self.active_group.remove(self.myCannon)
+                self.hasShoot = False
+                self.changeTurn = True
 
         elif event == CHARGE:
             print("Get random charge...")
