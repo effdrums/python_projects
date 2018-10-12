@@ -52,8 +52,9 @@ if __name__ == "__main__":
         print(i)
         index = (color_index + i) % len(tank_colors)
         tank_aux = tank.Tank(tank_colors[index],tank_size['x'],tank_size['y'])
-        tank_aux.rect.x = random.randrange(10, screen_width - 20)
-        tank_aux.rect.y = screen_height - 10
+        pos_x = random.randrange(10, screen_width - 20)
+        pos_y = screen_height - 10
+        tank_aux.setPos(pos_x,pos_y)
         tank_aux.setScreenSize(screen_width,screen_height)
         tank_sprites_list.add(tank_aux)
 

@@ -27,8 +27,12 @@ class Cannon(pygame.sprite.Sprite):
         print("rotate")
         self.degree += 2
         self.degree = self.degree % 360
+        angle = self.degree
+
+        if self.degree >= 180: 
+            angle = - self.degree
 
         center = self.rect.center
-        self.image = pygame.transform.rotate(self.original_image,self.degree)
+        self.image = pygame.transform.rotate(self.original_image,angle)
         self.rect = self.image.get_rect()
         self.rect.center = center

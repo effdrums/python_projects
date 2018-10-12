@@ -2,6 +2,7 @@ import pygame
 import healthBar
 import bombBar
 import fuelBar
+import cannon
 import time
 
 SELECT_ACTION = 0
@@ -17,6 +18,9 @@ class Tank(pygame.sprite.Sprite):
     myHealthBar = None
     myBombBar = None
     myFuelBar = None
+    myCannon = None
+
+    active_group = None
     
     shake_count = 0
     shake_up = True
@@ -48,9 +52,15 @@ class Tank(pygame.sprite.Sprite):
         self.myFuelBar = fuelBar.FuelBar()
         self.myFuelBar.setPos(2,20)
 
+        self.myCannon = cannon.Cannon(_color,(10,2))
+
+        self.active_group = pygame.sprite.Group()
+        
     def setPos(self, _x_pos, _y_pos):
         self.rect.x = _x_pos
         self.rect.y = _y_pos
+        self.myCannon.rect.center = (_x_pos + int(self.rect.width / 2), _y_pos)
+        #self.myCannon.setPos(_x_pos , _y_pos)
 
     def setScreenSize(self, screen_width, screen_height):
         self.screen_size = { 'w': screen_width, 'h': screen_height }
@@ -90,7 +100,7 @@ class Tank(pygame.sprite.Sprite):
                     if (self.rect.x + self.image.get_width() < self.screen_size['w'] - self.image.get_width() ):
                         self.rect.x += 1
                         self.myFuelBar.consume()
-                        
+
                 elif key == pygame.K_LEFT:
                     print("Moving left")
                     if self.rect.x > 0: 
@@ -106,6 +116,9 @@ class Tank(pygame.sprite.Sprite):
 
         elif event == SHOOT:
             print("Shooting...")
+            self.active_group.add(self.myCannon)
+            self.myCannon.rotate()
+
         elif event == CHARGE:
             print("Get random charge...")
 
@@ -114,6 +127,9 @@ class Tank(pygame.sprite.Sprite):
         self.myHealthBar.getGroup().draw(screen)
         self.myBombBar.getGroup().draw(screen)
         self.myFuelBar.getGroup().draw(screen)
+        self.active_group.draw(screen)
+
+    
 
     def tankShake(self):
         self.time_start_shake = time.time()
