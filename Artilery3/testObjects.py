@@ -36,6 +36,7 @@ if __name__ == "__main__":
     myHealthBar.setPos(2,2)
     myBombBar.setPos(2,10)
     myFuelBar.setPos(2,20)
+    hasShoot = False
 
     while canPlay:
         for event in pygame.event.get():
@@ -44,12 +45,16 @@ if __name__ == "__main__":
             elif event.type == pygame.KEYDOWN:
                 key_event = event.key
                 print("Event key= " + event.unicode)
-                myCannon.rotate()
+                #myCannon.rotate()
+                hasShoot = True
+                myBombBar.initShoot(70,10,140)
 
         screen.fill(BLACK)
 
-        myCannon.rotate()
 
+        if hasShoot:
+            myBombBar.shoot()
+        #myCannon.rotate()
         myHealthBar.draw(screen)
         myBombBar.draw(screen)
         myFuelBar.draw(screen)
