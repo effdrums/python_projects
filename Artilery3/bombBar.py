@@ -30,12 +30,16 @@ class BombBar:
 
     x_bomb = 30
     y_bomb = 30
+    x_bomb_init = 0
+    y_bomb_init = 0
     gravity=9.81
     angle = 0
-    velocity=5
+    velocity=50
     vx=velocity * math.cos(math.radians(angle))
     vy=velocity * math.sin(math.radians(angle))
     t=0
+
+    finish_shoot = False
 
     def __init__(self):
         self.bomb_sprite_list = pygame.sprite.Group()
@@ -56,24 +60,38 @@ class BombBar:
         return self.bomb_sprite_list
 
     def getSize(self):
+        print(len(self.bomb_sprite_list.sprites()))
         return len(self.bomb_sprite_list.sprites()) 
    
 
     def initShoot(self,angle, x_init, y_init):
         print("Init shoot")
-        self.x_bomb = x_init
-        self.y_bomb = y_init
+        self.x_bomb = self.x_bomb_init = x_init
+        self.y_bomb = self.y_bomb_init = y_init
         self.vx=self.velocity * math.cos(math.radians(angle))
         self.vy=self.velocity * math.sin(math.radians(angle))
+        self.finish_shoot = False
+        
         
     def shoot(self):
         print("Update shoot")
-        self.t +=0.02
-        self.x_bomb += self.vx*self.t
-        self.y_bomb -= (self.vy*self.t - (self.gravity/2)*self.t*self.t)
-        print("["+str(self.vy*self.t)+","+str((self.gravity/2)*self.t*self.t)+"]")
-        print("["+str(self.x_bomb)+","+str(self.y_bomb)+"]")
-        self.getGroup().sprites()[self.getSize()-1].setPos(self.x_bomb,self.y_bomb)
+        if self.getSize() > 0:
+            self.t +=0.1
+            self.x_bomb = self.x_bomb_init + self.vx*self.t
+            self.y_bomb = self.y_bomb_init - (self.vy*self.t - (self.gravity/2)*self.t*self.t)
+            print("["+str(self.vy*self.t)+","+str((self.gravity/2)*self.t*self.t)+"]")
+            print("["+str(self.x_bomb)+","+str(self.y_bomb)+"]")
+            sprite = self.getGroup().sprites()[self.getSize()-1]
+            sprite.setPos(self.x_bomb,self.y_bomb)
 
-        '''if self.y_bomb > 150:
-            self.hasShoot = False '''
+            if self.y_bomb > self.y_bomb_init + 30:
+                self.finish_shoot = True
+                self.t = 0
+                self.getGroup().remove(sprite)
+        else:
+            self.finish_shoot = True
+
+
+
+    def isShootFinish(self):
+        return self.finish_shoot

@@ -124,14 +124,21 @@ class Tank(pygame.sprite.Sprite):
             if ev_type == pygame.KEYDOWN:
                 if key == pygame.K_SPACE:
                     self.hasShoot = True
+                    angle = self.myCannon.angle
+                    x_init = self.myCannon.rect.centerx
+                    y_init = self.myCannon.rect.centery
+                    self.tankInitShoot(angle , x_init, y_init)
 
             if not self.hasShoot:
                 self.myCannon.rotate()
             else:
                 print("Shoot angle = " + str(self.myCannon.degree))
                 self.active_group.remove(self.myCannon)
-                self.hasShoot = False
-                self.changeTurn = True
+                self.tankShoot()
+                
+                if self.myBombBar.isShootFinish():
+                    self.hasShoot = False
+                    self.changeTurn = True
 
         elif event == CHARGE:
             print("Get random charge...")
@@ -160,5 +167,11 @@ class Tank(pygame.sprite.Sprite):
             if self.shake_count == 0:
                 self.shake_up = True
 
+    def tankInitShoot(self, angle , x_init, y_init):
+        self.myBombBar.initShoot(angle, x_init, y_init)
+
+    def tankShoot(self):
+        self.myBombBar.shoot()
+        
 
 
