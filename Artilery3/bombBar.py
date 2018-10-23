@@ -23,7 +23,7 @@ class BombBlock(pygame.sprite.Sprite):
 
 class BombBar:
 
-    max_bomb = 3
+    max_bomb = 6
     bomb_sprite_list = None
     block_size = 3
     offset = 2 
@@ -60,7 +60,7 @@ class BombBar:
         return self.bomb_sprite_list
 
     def getSize(self):
-        print(len(self.bomb_sprite_list.sprites()))
+        #print(len(self.bomb_sprite_list.sprites()))
         return len(self.bomb_sprite_list.sprites()) 
    
 
@@ -79,8 +79,8 @@ class BombBar:
             self.t +=0.1
             self.x_bomb = self.x_bomb_init + self.vx*self.t
             self.y_bomb = self.y_bomb_init - (self.vy*self.t - (self.gravity/2)*self.t*self.t)
-            print("["+str(self.vy*self.t)+","+str((self.gravity/2)*self.t*self.t)+"]")
-            print("["+str(self.x_bomb)+","+str(self.y_bomb)+"]")
+            #print("["+str(self.vy*self.t)+","+str((self.gravity/2)*self.t*self.t)+"]")
+            #print("["+str(self.x_bomb)+","+str(self.y_bomb)+"]")
             sprite = self.getGroup().sprites()[self.getSize()-1]
             sprite.setPos(self.x_bomb,self.y_bomb)
 
@@ -91,7 +91,14 @@ class BombBar:
         else:
             self.finish_shoot = True
 
-
+    def getBoombShooted(self):
+        return  self.getGroup().sprites()[self.getSize()-1]
 
     def isShootFinish(self):
         return self.finish_shoot
+
+    def setShootFinish(self):
+        sprite = self.getGroup().sprites()[self.getSize()-1]
+        self.finish_shoot = True
+        self.t = 0
+        self.getGroup().remove(sprite)

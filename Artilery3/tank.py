@@ -136,7 +136,7 @@ class Tank(pygame.sprite.Sprite):
                 self.active_group.remove(self.myCannon)
                 self.tankShoot()
                 
-                if self.myBombBar.isShootFinish():
+                if self.myBombBar.isShootFinish() :
                     self.hasShoot = False
                     self.changeTurn = True
 
@@ -172,6 +172,18 @@ class Tank(pygame.sprite.Sprite):
 
     def tankShoot(self):
         self.myBombBar.shoot()
+
+    def tankShootCheck(self, group_tank):
+        current_bomb = self.myBombBar.getBoombShooted()
+        collided = pygame.sprite.spritecollideany(current_bomb, group_tank)
+        if collided and collided != self:
+            self.myBombBar.setShootFinish()
+            self.hasShoot = False        
+            self.changeTurn = True
+            return collided
+
+    def tankLooseHealt(self):
+        self.myHealthBar.loseHealth()
         
 
 

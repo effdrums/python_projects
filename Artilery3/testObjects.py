@@ -4,6 +4,7 @@ import healthBar
 import bombBar
 import fuelBar
 import cannon
+import chargeBar
 
 
 # Define some colors
@@ -26,6 +27,10 @@ if __name__ == "__main__":
     myHealthBar = healthBar.HealthBar()
     myBombBar = bombBar.BombBar()
     myFuelBar = fuelBar.FuelBar()
+    myChargeBar = chargeBar.chargeBar()
+    myChargeBar.addHealthCharge()
+    myChargeBar.addBombCharge()
+    myChargeBar.addFuelCharge()
 
     myCannon = cannon.Cannon(GREEN, (10,2))
     myCannon.setPos(100,100)
@@ -47,7 +52,8 @@ if __name__ == "__main__":
                 print("Event key= " + event.unicode)
                 #myCannon.rotate()
                 hasShoot = True
-                myBombBar.initShoot(70,10,140)
+                #myBombBar.initShoot(70,10,140)
+                myChargeBar.removeHealthCharge()
 
         screen.fill(BLACK)
 
@@ -58,6 +64,7 @@ if __name__ == "__main__":
         myHealthBar.draw(screen)
         myBombBar.draw(screen)
         myFuelBar.draw(screen)
+        myChargeBar.draw(screen)
         group.draw(screen)
             
         pygame.display.flip()

@@ -80,6 +80,7 @@ if __name__ == "__main__":
                                 
         #FILL 
         screen.fill(BLACK)
+        current_tank = tank_sprites_list.sprites()[current_player]
 
         #TODO UPDATE
         if current_event == SELECT_ACTION:
@@ -97,11 +98,18 @@ if __name__ == "__main__":
                 next_event = CHARGE
             else:
                 next_event = SELECT_ACTION
-
-   
-        current_tank = tank_sprites_list.sprites()[current_player]
+        
+               
         print("EVENT = " + str(current_event))
         current_tank.update(next_event, key_event, key_type)
+
+        if current_event == SHOOT and current_tank.hasShoot:
+            print("Check colision")
+            collided = current_tank.tankShootCheck(tank_sprites_list)
+            if collided:
+                collided.tankLooseHealt()
+                print ("BOOOM")
+
         current_event = next_event
 
         if current_tank.isChangeTurn():

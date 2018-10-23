@@ -20,6 +20,7 @@ class HealthBlock(pygame.sprite.Sprite):
 class HealthBar:
 
     max_life = 10
+    current_life = 10
     health_sprite_list = None
     block_size = {'x':5, 'y':5}
     offset = 2 
@@ -42,3 +43,15 @@ class HealthBar:
     
     def getGroup(self):
         return self.health_sprite_list
+
+    def loseHealth(self):
+        if self.current_life > 0:
+            health_sprites = self.health_sprite_list.sprites()
+            remove1 = health_sprites[self.current_life - 1]
+            remove2 = health_sprites[self.current_life - 2]
+            self.current_life -= 2
+            self.health_sprite_list.remove(remove1)
+            self.health_sprite_list.remove(remove2)
+
+
+        
