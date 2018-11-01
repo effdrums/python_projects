@@ -6,7 +6,7 @@ import random
 #DEFINE EVENTS
 SELECT_ACTION = 0
 REPAIR = 1
-SHIELD = 2
+CHARGEBOMB = 2
 FUEL = 3
 MOVE = 4
 SHOOT = 5
@@ -59,6 +59,7 @@ if __name__ == "__main__":
         tank_sprites_list.add(tank_aux)
 
     current_player = random.randint(0,2)
+    num_alive = 3
 
     key_event = None
     key_type = None
@@ -88,8 +89,8 @@ if __name__ == "__main__":
                 next_event = SHOOT
             elif key_event == pygame.K_r:
                 next_event = REPAIR
-            elif key_event == pygame.K_a:
-                next_event = SHIELD
+            elif key_event == pygame.K_b:
+                next_event = CHARGEBOMB
             elif key_event == pygame.K_f:
                 next_event = FUEL
             elif key_event == pygame.K_m:
@@ -108,6 +109,9 @@ if __name__ == "__main__":
             collided = current_tank.tankShootCheck(tank_sprites_list)
             if collided:
                 collided.tankLooseHealt()
+                if collided.tankIsDead():
+                    tank_sprites_list.remove(collided)
+                    num_alive -= 1
                 print ("BOOOM")
 
         current_event = next_event
@@ -115,11 +119,13 @@ if __name__ == "__main__":
         if current_tank.isChangeTurn():
             print("HAS CHANGED!!!!")
             #key_event = None
-            #key_type = None
-            current_event = next_event = SELECT_ACTION
+            #key_type = None7
+            next_event = SELECT_ACTION
+            current_event = SELECT_ACTION
+            key_event = None
             #next_event = None
             current_player += 1
-            current_player %= 3
+            current_player %= num_alive
             tank_sprites_list.sprites()[current_player].changeTurn = False
 
     

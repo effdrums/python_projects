@@ -62,3 +62,13 @@ class FuelBar:
             sprite.rect = sprite.image.get_rect()
             sprite.rect.x = self.block_pos['x']
             sprite.rect.y = self.block_pos['y']
+    
+    def restart(self):
+        self.current_fuel = self.max_fuel
+        new_width = int( int(self.current_fuel) * self.block_size['x'] / self.max_fuel)
+        print(new_width)
+        sprite = self.fuel_sprite_list.sprites()[0]
+        sprite.image = pygame.transform.scale(sprite.image, (new_width, self.block_size['y']))
+        sprite.rect = sprite.image.get_rect()
+        sprite.rect.x = self.block_pos['x']
+        sprite.rect.y = self.block_pos['y']

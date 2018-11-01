@@ -27,7 +27,7 @@ if __name__ == "__main__":
     myHealthBar = healthBar.HealthBar()
     myBombBar = bombBar.BombBar()
     myFuelBar = fuelBar.FuelBar()
-    myChargeBar = chargeBar.chargeBar()
+    myChargeBar = chargeBar.ChargeBar()
     myChargeBar.addHealthCharge()
     myChargeBar.addBombCharge()
     myChargeBar.addFuelCharge()

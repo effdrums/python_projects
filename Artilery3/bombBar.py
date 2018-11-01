@@ -41,6 +41,9 @@ class BombBar:
 
     finish_shoot = False
 
+    x_pos = None
+    y_pos = None
+
     def __init__(self):
         self.bomb_sprite_list = pygame.sprite.Group()
         for i in range(self.max_bomb):
@@ -48,6 +51,8 @@ class BombBar:
 
         
     def setPos(self, _x_pos, _y_pos):
+        self.x_pos = _x_pos
+        self.y_pos = _y_pos
         bomb_sprites = self.bomb_sprite_list.sprites()
         
         for i in range(self.max_bomb):
@@ -102,3 +107,10 @@ class BombBar:
         self.finish_shoot = True
         self.t = 0
         self.getGroup().remove(sprite)
+
+    def restart(self):
+        self.bomb_sprite_list = pygame.sprite.Group()
+        for i in range(self.max_bomb):
+            self.bomb_sprite_list.add(BombBlock(GRAY,self.block_size))
+        
+        self.setPos(self.x_pos, self.y_pos)

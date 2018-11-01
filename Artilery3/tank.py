@@ -2,12 +2,15 @@ import pygame
 import healthBar
 import bombBar
 import fuelBar
+import chargeBar
 import cannon
 import time
+import random
+
 
 SELECT_ACTION = 0
 REPAIR = 1
-SHIELD = 2
+CHARGEBOMB = 2
 FUEL = 3
 MOVE = 4
 SHOOT = 5
@@ -19,6 +22,7 @@ class Tank(pygame.sprite.Sprite):
     myBombBar = None
     myFuelBar = None
     myCannon = None
+    myChargeBar = None
 
     active_group = None
     
@@ -26,12 +30,18 @@ class Tank(pygame.sprite.Sprite):
     shake_up = True
     
     time_start_shake = None
+    time_start_charge = None
+    min_elapsed_charge = 0.5
     min_elapsed = 0.100
 
     screen_size = None
 
     changeTurn = False
     hasShoot = False
+    hasCharged = False
+    hasRepared = False
+    hasChargedBomb = False
+    hasFueled = False
 
 
     def __init__(self, _color, _width, _height):
@@ -53,6 +63,8 @@ class Tank(pygame.sprite.Sprite):
         self.myFuelBar = fuelBar.FuelBar()
         self.myFuelBar.setPos(2,20)
 
+        self.myChargeBar = chargeBar.ChargeBar()
+
         self.myCannon = cannon.Cannon(_color,(10,2))
 
         self.active_group = pygame.sprite.Group()
@@ -71,7 +83,7 @@ class Tank(pygame.sprite.Sprite):
         return self.changeTurn
 
     def update(self,event, key, ev_type):
-        #print("Calling Update Tank..." + str(event))
+        print("Calling Update Tank..." + str(event))
         if self.time_start_shake is None:
             self.time_start_shake = time.time()
 
@@ -89,30 +101,71 @@ class Tank(pygame.sprite.Sprite):
 
         elif event == REPAIR:
             print("Repairing...")
-        elif event == SHIELD:
-            print("Using shield...")
+            if not self.hasRepared and self.myChargeBar.has_health:
+                if ev_type == pygame.KEYUP and key == pygame.K_r:
+                    self.myHealthBar.restart()
+                    self.myChargeBar.removeHealthCharge()
+                    self.hasRepared = True
+                    self.time_start_charge = time.time()
+            else:
+                if time.time() - self.time_start_charge > self.min_elapsed_charge:
+                    print("REPARED!!")
+                    self.changeTurn = True
+                    self.hasRepared = False
+            
+        elif event == CHARGEBOMB:
+            print("Using CHARGEBOMB...")
+            if not self.hasChargedBomb and self.myChargeBar.has_bomb:
+                if ev_type == pygame.KEYUP and key == pygame.K_b:
+                    self.myBombBar.restart()
+                    self.myChargeBar.removeBombCharge()
+                    self.hasRepared = True
+                    self.time_start_charge = time.time()
+            else:
+                if time.time() - self.time_start_charge > self.min_elapsed_charge:
+                    self.changeTurn = True
+                    self.hasChargedBomb = False
+
         elif event == FUEL:
             print("Charge fuel...")
+            print("Repairing...")
+            if not self.hasFueled and self.myChargeBar.has_fuel:
+                if ev_type == pygame.KEYUP and key == pygame.K_f:
+                    self.myFuelBar.restart()
+                    self.myChargeBar.removeFuelCharge()
+                    self.hasFueled = True
+                    self.time_start_charge = time.time()
+            else:
+                if time.time() - self.time_start_charge > self.min_elapsed_charge:
+                    print("REPARED!!")
+                    self.changeTurn = True
+                    self.hasFueled = False
+                    
         elif event == MOVE:
             print("Move...")
-            if ev_type == pygame.KEYDOWN:
-                if key == pygame.K_RIGHT:
-                    print("Moving right")
-                    if (self.rect.x + self.image.get_width() < self.screen_size['w'] - self.image.get_width() ):
-                        x = self.rect.x + 1
-                        self.setPos(x,self.rect.y)
-                        self.myFuelBar.consume()
+            if self.myFuelBar.current_fuel > 0:
+                if ev_type == pygame.KEYDOWN:
+                    if key == pygame.K_RIGHT:
+                        print("Moving right")
+                        if (self.rect.x + self.image.get_width() < self.screen_size['w'] - self.image.get_width() ):
+                            x = self.rect.x + 1
+                            self.setPos(x,self.rect.y)
+                            self.myFuelBar.consume()
 
-                elif key == pygame.K_LEFT:
-                    print("Moving left")
-                    if self.rect.x > 0: 
-                        x = self.rect.x - 1
-                        self.setPos(x, self.rect.y)
-                        self.myFuelBar.consume()
-            elif ev_type == pygame.KEYUP:
-                if key == pygame.K_RIGHT or key == pygame.K_LEFT:
-                    print("CHANGE!!!")
-                    self.changeTurn = True
+                    elif key == pygame.K_LEFT:
+                        print("Moving left")
+                        if self.rect.x > 0: 
+                            x = self.rect.x - 1
+                            self.setPos(x, self.rect.y)
+                            self.myFuelBar.consume()
+                elif ev_type == pygame.KEYUP:
+                    if key == pygame.K_RIGHT or key == pygame.K_LEFT:
+                        print("CHANGE!!!")
+                        self.changeTurn = True
+            
+            else:
+                self.changeTurn = True
+                #TODO notify user not fuel 
 
             
                 
@@ -141,13 +194,35 @@ class Tank(pygame.sprite.Sprite):
                     self.changeTurn = True
 
         elif event == CHARGE:
-            print("Get random charge...")
+            if not self.hasCharged:
+                if ev_type == pygame.KEYUP and key == pygame.K_c:
+                    print("Get random charge...")
+                    rand_charge = random.randint(0,2)
+                    if rand_charge == 0:
+                        self.myChargeBar.addBombCharge()
+                        self.myChargeBar.has_bomb =  True
+                    elif rand_charge == 1:
+                        self.myChargeBar.addFuelCharge()
+                        self.myChargeBar.has_fuel = True
+                    elif rand_charge == 2:
+                        self.myChargeBar.addHealthCharge()
+                        self.myChargeBar.has_health = True
+
+                    self.hasCharged = True
+                    self.time_start_charge = time.time()
+            else:        
+                if time.time() - self.time_start_charge > self.min_elapsed_charge:    
+                    self.changeTurn = True
+                    self.hasCharged = False
+                
+
 
 
     def drawInfo(self, screen):
-        self.myHealthBar.getGroup().draw(screen)
-        self.myBombBar.getGroup().draw(screen)
-        self.myFuelBar.getGroup().draw(screen)
+        self.myHealthBar.draw(screen)
+        self.myBombBar.draw(screen)
+        self.myFuelBar.draw(screen)
+        self.myChargeBar.draw(screen)
         self.active_group.draw(screen)
 
     
@@ -184,6 +259,12 @@ class Tank(pygame.sprite.Sprite):
 
     def tankLooseHealt(self):
         self.myHealthBar.loseHealth()
+
+    def tankIsDead(self):
+        if self.myHealthBar.current_life > 0:
+            return False
+        else:
+            return True
         
 
 
